@@ -1,0 +1,11 @@
+{
+  "schema": 1,
+  "machines": [
+    {
+      "name": "example-workstation",
+      "memory_gib": null,
+      "reserve_gib": 8,
+      "description": "Set usable inference memory; keep actual hardware details in private context."
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "schema": 1,
+  "executable": "agy",
+  "verified_version": "1.4.2",
+  "home_directory": ".gemini",
+  "home_environment": null,
+  "instruction_file": "AGENTS.md",
+  "skill_scope": "user",
+  "skill_directory": ".agents/skills",
+  "alternate_skill_directory": "config/skills",
+  "additional_skill_directories": ["skills", "antigravity-cli/skills"],
+  "shadow_files": [],
+  "project_shadow_files": [],
+  "project_skill_directories": [
+    ".agents/skills",
+    ".agent/skills",
+    "_agents/skills",
+    "_agent/skills"
+  ],
+  "project_bridge": null,
+  "setup_url": "https://antigravity.google/docs/cli/install/"
+}

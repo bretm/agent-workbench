@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "version": "0.1.0",
+  "harnesses": ["codex", "claude", "antigravity"],
+  "skills": {
+    "plan-sessions": {"dependencies": []},
+    "handoff": {"dependencies": ["plan-sessions"]},
+    "grilling": {"dependencies": []},
+    "wait-what": {"dependencies": []},
+    "write-product-spec": {"dependencies": []},
+    "write-tech-spec": {"dependencies": ["write-product-spec", "plan-sessions"]},
+    "playwright-cli": {"dependencies": []},
+    "ui-ux-pro-max": {"dependencies": []},
+    "design-taste-frontend": {"dependencies": []}
+  },
+  "references": ["models.md", "work-records.md", "private-context.md"],
+  "agreements": "agreements/working.md",
+  "competing_skills": ["grill-me", "claude-handoff"]
+}

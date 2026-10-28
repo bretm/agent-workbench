@@ -1,0 +1,54 @@
+{
+  "schema": 1,
+  "executable": "codex",
+  "verified_version": "0.165.0",
+  "home_directory": ".codex",
+  "home_environment": "CODEX_HOME",
+  "instruction_file": "AGENTS.md",
+  "skill_directory": ".agents/skills",
+  "alternate_skill_directory": "skills",
+  "shadow_files": [
+    "AGENTS.override.md"
+  ],
+  "project_shadow_files": [
+    "AGENTS.override.md"
+  ],
+  "project_bridge": null,
+  "setup_url": "https://learn.chatgpt.com/docs/codex/cli",
+  "skill_scope": "user",
+  "project_skill_directories": [
+    ".agents/skills",
+    ".codex/skills"
+  ],
+  "workflow_reset": {
+    "builtin_skill_directories": [
+      ".system"
+    ],
+    "harness_paths": [
+      "AGENTS.md",
+      "AGENTS.override.md",
+      "prompts",
+      "agents"
+    ],
+    "user_paths": [
+      "AGENTS.md",
+      "AGENTS.override.md"
+    ],
+    "settings_file": "config.toml",
+    "plugin_key": "plugins",
+    "workflow_setting_keys": [
+      "instructions",
+      "developer_instructions",
+      "model_instructions_file",
+      "agents",
+      "skills"
+    ],
+    "additional_settings_files": [],
+    "skill_settings_key": "skills",
+    "plugin_cache_directory": "plugins/cache",
+    "plugin_skill_control": {
+      "entry_template": "[[skills.config]]\npath = {path}\nenabled = false"
+    },
+    "builtin_skill_note": "Harness-managed system skills and built-in commands remain enabled."
+  }
+}

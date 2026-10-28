@@ -1,0 +1,35 @@
+name: Validate
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: ${{ matrix.os }} / Python 3.11
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-14, macos-15-intel]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v7
+        with:
+          python-version: '3.11'
+      - name: Record native platform and Python version
+        run: python3 -c "import platform, sys; print(platform.platform()); print(platform.machine()); print(sys.version)"
+      - name: Run installer tests in temporary homes and Git repositories
+        run: python3 -m unittest discover -s tests -v
+      - name: Validate skills and adapters
+        run: python3 awb.py validate
+      - name: Check whitespace
+        run: git show --format= --check HEAD

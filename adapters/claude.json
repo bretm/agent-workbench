@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "executable": "claude",
+  "verified_version": "2.1.301",
+  "home_directory": ".claude",
+  "home_environment": "CLAUDE_CONFIG_DIR",
+  "instruction_file": "CLAUDE.md",
+  "skill_directory": "skills",
+  "alternate_skill_directory": null,
+  "shadow_files": [],
+  "project_shadow_files": [],
+  "project_bridge": "CLAUDE.md",
+  "setup_url": "https://code.claude.com/docs/en/setup",
+  "skill_scope": "harness",
+  "project_skill_directories": [
+    ".claude/skills"
+  ],
+  "workflow_reset": {
+    "builtin_skill_directories": [],
+    "preserved_skill_directories": ["synced"],
+    "harness_paths": [
+      "CLAUDE.md",
+      "CLAUDE.local.md",
+      "rules",
+      "commands",
+      "agents",
+      "output-styles",
+      "workflows"
+    ],
+    "user_paths": [
+      "CLAUDE.md",
+      "CLAUDE.local.md"
+    ],
+    "settings_file": "settings.json",
+    "plugin_key": "enabledPlugins",
+    "workflow_setting_keys": [
+      "outputStyle",
+      "skillOverrides",
+      "disableBundledSkills"
+    ],
+    "additional_settings_files": [
+      "settings.local.json"
+    ],
+    "builtin_skill_note": "Bundled CLI skills, built-in commands and account-synced skills remain enabled; the workbench adds to these client-provided capabilities."
+  }
+}
