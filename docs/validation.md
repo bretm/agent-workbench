@@ -1,5 +1,25 @@
 # Validation record
 
+## Codex update compatibility
+
+Reverified 2026-11-06 after the live update preview detected Codex **0.167.0** against the earlier **0.165.0** adapter pin. A staged source with the candidate pin passed install, check, update and uninstall in a temporary home and disposable Git repository using real Codex **0.167.0**, Claude Code **2.1.301** and Antigravity **1.4.2** version probes.
+
+Codex app-server `skills/list` discovered all ten workbench skills once and enabled at user scope, with no discovery errors and bundled system skills available. A synthetic plugin installed from a temporary local marketplace exposed its skill before workflow reset; after reset, that skill was disabled while the plugin remained enabled and all workbench skills remained enabled. The native system-skill files survived the installer lifecycle unchanged. No credentials were copied and no inference was requested. Temporary probe logs establish installer, native discovery and skill-control compatibility; instruction obedience and authenticated merge-closeout behavior remain unverified.
+
+The adapter and version fixture were advanced to **0.167.0** after these checks. Official OpenAI documentation was rechecked for [skill discovery and path controls](https://learn.chatgpt.com/docs/build-skills), [global and project instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md), and [app-server skill discovery](https://learn.chatgpt.com/docs/app-server).
+
+## Merge checkout closeout
+
+Added 2026-11-06. The shared agreements require returning the active checkout to the verified merge target after authorized merge work, including user-performed merges during the task and work without an issue. The work-record policy defines target and remote verification, clean-checkout and worktree checks, a fast-forward-only update, preservation of local work and commits, and reporting of the final state or any remaining obstacle.
+
+[Agreement distribution fixtures](../tests/test_agreements.py) derive coverage from every client in `workbench.json`'s `harnesses` list and each adapter's executable, verified version and instruction destination. They exercise installation and update of the full shared agreements and current closeout-policy reference, preserve existing and subsequently added preferences and file permissions, and verify that previews do not write. An additional fixture adds a client with a different instruction filename and runs the same checks, demonstrating that coverage expands with the supported-client list.
+
+All **127 tests pass** with `python3 -m unittest discover -s tests -v`. `python3 awb.py validate` passes for the current manifest's ten portable skills, references, dependencies and adapters; `git diff --check` passes.
+
+These checks use disposable homes and stub version probes. They establish instruction distribution and freshness, not native agent obedience.
+
+The reviewed update was subsequently applied to all supported clients in the installation: Codex, Claude Code and Antigravity. The post-update `python3 awb.py check` reports a healthy installation matching this checkout, with zero changes and conflicts. Each client's installed agreements and current closeout-policy reference were read back and verified. Native merge-closeout behavior remains unverified.
+
 ## Private context and clean publication
 
 Checked 2026-10-27. Private-context fixtures cover interactive cancellation, profile updates and backups, root overrides, migration dates and conflicts, worktree and symlink rejection, generated report privacy, and installed runtime use without the source checkout. Installer lifecycle fixtures verify that personal context survives updates and removal and that installed snapshots exclude private profile values. Model refresh writes external reports and caches and suppresses personalized diffs unless explicitly requested.

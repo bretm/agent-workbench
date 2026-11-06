@@ -6,6 +6,7 @@
     "plan-sessions": {"dependencies": []},
     "handoff": {"dependencies": ["plan-sessions"]},
     "grilling": {"dependencies": []},
+    "grill-with-docs": {"dependencies": ["grilling"]},
     "wait-what": {"dependencies": []},
     "write-product-spec": {"dependencies": []},
     "write-tech-spec": {"dependencies": ["write-product-spec", "plan-sessions"]},

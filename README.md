@@ -10,6 +10,7 @@ Works with **Codex, Claude Code and Google Antigravity CLI on Linux and macOS**.
 - Break larger changes into manageable work sessions.
 - Save progress and next steps before switching sessions.
 - Think through a decision, or ask for a clearer explanation.
+- Grill a design while recording agreed domain language and significant decisions.
 - Check web pages in a browser with Playwright CLI.
 - Design websites and applications with UI UX Pro Max, and refine websites and web application screens with Taste.
 

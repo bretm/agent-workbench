@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "executable": "codex",
-  "verified_version": "0.165.0",
+  "verified_version": "0.167.0",
   "home_directory": ".codex",
   "home_environment": "CODEX_HOME",
   "instruction_file": "AGENTS.md",

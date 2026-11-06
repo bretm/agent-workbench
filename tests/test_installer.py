@@ -36,7 +36,7 @@ class InstallerTests(unittest.TestCase):
         self.bin = self.root / 'bin'
         self.bin.mkdir()
         (self.bin / 'git').symlink_to(shutil.which('git'))
-        for name, version in [('codex', 'codex-cli 0.165.0'), ('claude', '2.1.301 (Claude Code)')]:
+        for name, version in [('codex', 'codex-cli 0.167.0'), ('claude', '2.1.301 (Claude Code)')]:
             p = self.bin / name
             p.write_text('#!/bin/sh\nprintf "%s\\n" "' + version + '"\n')
             p.chmod(0o755)

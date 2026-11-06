@@ -60,6 +60,7 @@ License: [MIT, copyright 2026 Matt Pocock](MATT-POCOCK-LICENSE.txt).
 | Adopted skill | Source paths | Adaptation / dependency resolution |
 |---|---|---|
 | grilling | skills/productivity/grilling/SKILL.md; skills/productivity/grill-me/SKILL.md | One question per turn; bounded decision; repository investigation. Upstream grill-me calls a harness-specific Skill tool to load grilling. One portable skill replaces both; no delegation or tool dependency. |
+| grill-with-docs | skills/engineering/grill-with-docs/SKILL.md; skills/engineering/domain-modeling/SKILL.md | Uses the workbench grilling skill and incorporates domain modeling directly instead of harness-specific Skill calls. Existing project document conventions take precedence; domain terms are captured as agreed and ADRs offered sparingly. |
 | wait-what | skills/productivity/wait-what/SKILL.md | Context reset and simplified language retained; no unsupported invocation metadata. CONTEXT.md and CONTEXT-MAP.md are optional project inputs. |
 | handoff | skills/productivity/handoff/SKILL.md | Existing work owner, evidence and next prompt replace always writing a temporary document. Harness-specific Skill calls removed. Depends on plan-sessions prompt requirements and shared references. |
 | plan-sessions | Original work in agent-workbench | Shared model and work-record references; no external runtime dependency. |

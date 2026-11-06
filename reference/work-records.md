@@ -16,6 +16,18 @@ Issue closeout follows these defaults unless project instructions or express use
 - An intermediate child may close when its explicitly agreed outcome is complete and validated, even if delivery requires later integration. Record its accepted source and remaining integration work in the parent, identify the next responsible issue or mark the integration work unassigned and blocked, and retain the parent's integration gate.
 - Before closing a delivery issue or parent as complete, verify that the required results from its contributing branches are present in the target branch and required acceptance checks pass. Link PRs and integration evidence, checking ancestry or equivalent changes where appropriate. Distinguish implemented and tested on a branch, PR awaiting review, and integrated and complete. Research or other issues without repository changes do not require a PR solely to close.
 
+## Merge checkout closeout
+
+Completing an authorized merge includes returning the session's checkout to its updated merge target before handing control back. This applies whether the agent merges or the user reports merging during the active task, and whether or not an issue tracks the work. Explicit user direction and project instructions take precedence.
+
+1. Confirm that the merge completed and identify its actual target branch and remote from the merge or PR evidence. Do not assume `main` or `origin`. For squash or rebase merges, use confirmed merge metadata or equivalent-change evidence; source-branch ancestry alone may not establish integration. If the merge or target cannot be verified, report that uncertainty before changing the checkout.
+2. Inspect the session's checkout for staged, unstaged and untracked changes, an in-progress Git operation, local commits and linked worktrees. Require a clean working tree and no in-progress Git operation before switching. Preserve local work and commits; do not automatically stash, commit, discard, reset, force a switch, delete a branch or remove a worktree to complete this procedure. If the target is checked out in another worktree, report its location and the blocked switch without modifying that other checkout.
+3. Fetch the verified target from the correct remote. If fetching fails, report that the local checkout has not been verified as current. Check any existing local target branch against the fetched remote target before switching. Leave a branch with local commits ahead of or divergent from that target unchanged and report the reconciliation needed.
+4. Switch this checkout to the actual target, creating a local tracking branch if needed, and update it using a fast-forward only. Use the verified remote target explicitly rather than assuming an existing upstream points to it. If any step is blocked, preserve the current state and explain the obstacle and remaining work.
+5. Verify and report the final branch, whether the working tree is clean, and whether local `HEAD` matches the fetched remote target. Claim that the checkout is up to date only when this verification succeeds. Keep integration and acceptance evidence separate from any unfinished checkout closeout; record the remaining step in the existing execution owner when one exists.
+
+## Work-record reconciliation
+
 Before reporting completion, closing a child issue, or handing off tracked work, and after any follow-up that changes published continuation source (even after child closure), reconcile the existing records:
 
 1. Keep detailed validation, limits and uncertainty in the sole execution-status owner, linking supporting evidence. This ownership does not suppress parent coordination updates or create another execution owner.
