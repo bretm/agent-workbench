@@ -1,5 +1,17 @@
 # Validation record
 
+## Antigravity global skill location
+
+Checked 2026-11-12 with Antigravity CLI **1.5.7**. Its native `agy -p /skills` command discovered all ten workbench skills through directory symlinks in `~/.gemini/config/skills`, each exactly once. A separate fixture in `~/.agents/skills` was absent from the native list. Earlier startup directory-scan and plugin-validator evidence did not establish that this version would load that directory as global skills. The adapter now uses Antigravity's documented personal skill location, with links to the managed content pack. Codex continues to use `~/.agents/skills`.
+
+Real-client install, check, update and uninstall passed in a temporary home and disposable Git repository. Native discovery was checked against the installer's actual release links. No inference was requested. A temporary home does not isolate the system keyring, so this probe makes no claim of authentication isolation. These results establish discovery and installer compatibility, not instruction obedience. Private probe logs remain outside tracked content.
+
+Regression fixtures cover native destination links, shared content targets across Codex and Antigravity, custom homes, and upgrading the previous shared-location adapter. The upgrade preview writes nothing; apply preserves Codex's links, rollback removes only the newly added native links, and uninstall restores the original state. Previously owned shared-location links remain tracked for integrity and removal.
+
+All **128 tests pass** with `python3 -m unittest discover -s tests -v`; `python3 awb.py validate` and `git diff --check` pass. After reviewing the conflict-free preview, the user explicitly authorized the live Antigravity-only update. It applied successfully; the post-update scoped check reports zero changes and conflicts, and the live native `/skills` command lists all ten workbench skills exactly once. Codex's existing links were preserved.
+
+Sources checked: Google's [skill locations](https://antigravity.google/docs/skills/) and [customization discovery](https://antigravity.google/docs/customization-discovery/).
+
 ## Codex update compatibility
 
 Reverified 2026-11-06 after the live update preview detected Codex **0.167.0** against the earlier **0.165.0** adapter pin. A staged source with the candidate pin passed install, check, update and uninstall in a temporary home and disposable Git repository using real Codex **0.167.0**, Claude Code **2.1.301** and Antigravity **1.4.2** version probes.

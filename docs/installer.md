@@ -50,7 +50,7 @@ python3 awb.py install --harness codex --harness claude \
 
 These commands only preview or inspect. Add `--apply` to the chosen install command after review. Discovery only suggests candidates. Select Git roots or linked worktree roots explicitly; selecting a worktree does not also select its main checkout.
 
-Antigravity uses `agy --version`, shares `~/.agents/skills` with Codex, and receives working agreements in `~/.gemini/AGENTS.md`. Project `AGENTS.md` loads natively. Claude receives an `@AGENTS.md` compatibility import where needed. Project integration adds a pointer to local project facts; existing project instructions are preserved.
+Antigravity uses `agy --version`, discovers global skills through links in `~/.gemini/config/skills`, and receives working agreements in `~/.gemini/AGENTS.md`. Codex uses `~/.agents/skills`; both clients' links point to the same managed content pack. Project `AGENTS.md` loads natively. Claude receives an `@AGENTS.md` compatibility import where needed. Project integration adds a pointer to local project facts; existing project instructions are preserved.
 
 Updates keep the recorded assistants and projects. Add new targets explicitly. Removing a target from configuration does not uninstall it; removal currently applies to the full installation.
 
@@ -84,7 +84,7 @@ Use `python3 awb.py install --config /path/to/local.json`, then the same command
 
 On macOS, paths under `/tmp` and `/var` can pass through system symlinks. Use the real path for state and assistant-home overrides, such as `/private/tmp/workbench-state` instead of `/tmp/workbench-state`. The selected user-home root and project roots are resolved automatically; links inside a destination path still require an explicit real path.
 
-`--harness-home antigravity=PATH` overrides the installer destination corresponding to `~/.gemini`; it does not tell Antigravity to use that destination. No Antigravity home environment variable is assumed. User-scoped skills still use the selected `--home`.
+`--harness-home antigravity=PATH` overrides the installer destination corresponding to `~/.gemini`, including its `config/skills` links; it does not tell Antigravity to use that destination. No Antigravity home environment variable is assumed.
 
 ## Optional browser tools
 
@@ -154,6 +154,6 @@ Health checks establish local content integrity, prerequisite versions, root dis
 
 Client selection uses explicit CLI flags, local configuration, recorded installation targets, then fresh-install detection, in that order. Detection checks supported adapter executables on PATH; absent clients are skipped without creating their client-specific configuration. All supported adapters are candidates unless a custom manifest restricts `default_harnesses`. No detected clients is an error without writes. Detected clients still need verified versions, and explicitly selected or recorded missing clients still block apply. Detection is rerun during each fresh preview/apply; review the printed targets before applying.
 
-Adding Antigravity includes it in fresh-install detection when `agy` is present; it does not implicitly add it to an existing installation. Its shared user skill links have the same ownership entries as Codex links. Reset state separately records its covered harnesses, so an ordinary adapter addition does not expand a prior reset's configuration-retirement scope. Fresh reset detection considers only installed adapters with verified reset support. Antigravity currently supports ordinary installation only; explicitly selecting it for reset fails before writes. Saved reset inventories fix their target list for later apply.
+Adding Antigravity includes it in fresh-install detection when `agy` is present; it does not implicitly add it to an existing installation. Updating an older installation adds its native `~/.gemini/config/skills` links and preserves previously owned `~/.agents/skills` links, which Codex may still use. Retained links remain checked and owned until uninstall or rollback. Reset state separately records its covered harnesses, so an ordinary adapter addition does not expand a prior reset's configuration-retirement scope. Fresh reset detection considers only installed adapters with verified reset support. Antigravity currently supports ordinary installation only; explicitly selecting it for reset fails before writes. Saved reset inventories fix their target list for later apply.
 
 Explicit harness selection scopes reset-workflow health checks to those targets. Unselected harnesses' unmanaged workflow does not block adding or checking another harness; an unscoped `check` still reports every installed harness's reset-health conflicts. Owned-content integrity checks always cover all recorded entries.

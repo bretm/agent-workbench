@@ -17,7 +17,7 @@ class AntigravityTests(unittest.TestCase):
     def setUp(self):
         fixtures.InstallerTests.setUp(self)
         self.agy = self.bin / 'agy'
-        self.agy.write_text('#!/bin/sh\nprintf "1.4.2\\n"\n')
+        self.agy.write_text('#!/bin/sh\nprintf "1.5.7\\n"\n')
         self.agy.chmod(0o755)
 
     def install(self, *args):
@@ -45,30 +45,35 @@ class AntigravityTests(unittest.TestCase):
         self.assertTrue((repo / 'AGENTS.md').is_file())
         self.assertFalse((repo / 'GEMINI.md').exists())
         for name in json.loads((self.source / 'workbench.json').read_text())['skills']:
-            self.assertTrue((self.home / '.agents/skills' / name / 'SKILL.md').is_file())
-        self.assertFalse((self.home / '.gemini/config/skills').exists())
+            link = self.home / '.gemini/config/skills' / name
+            self.assertTrue(link.is_symlink())
+            self.assertTrue((link / 'SKILL.md').is_file())
+        self.assertFalse((self.home / '.agents/skills').exists())
         before = self.tree(self.home), self.tree(repo)
         self.install('--repo', repo)
         self.assertEqual(before, (self.tree(self.home), self.tree(repo)))
         self.assertEqual(self.cli('check')[0], 0)
 
-    def test_codex_and_antigravity_share_one_set_of_skill_links(self):
+    def test_codex_and_antigravity_link_native_locations_to_one_content_pack(self):
         code, output = self.cli('install', '--harness', 'codex', '--apply')
         self.assertEqual(code, 0, output)
         link = self.home / '.agents/skills/handoff'
         target = os.readlink(link)
         self.install()
         self.assertEqual(os.readlink(link), target)
+        native = self.home / '.gemini/config/skills/handoff'
+        self.assertEqual(native.resolve(), link.resolve())
         self.assertEqual(set(load_state(self.state)['harnesses']), {'codex', 'antigravity'})
         self.assertEqual(self.cli('check')[0], 0)
         self.assertEqual(self.cli('rollback', '--apply')[0], 0)
         self.assertTrue(link.is_symlink())
+        self.assertFalse(native.is_symlink())
         self.assertFalse((self.home / '.gemini/AGENTS.md').exists())
         self.assertEqual(self.cli('check')[0], 0)
 
     def test_update_rollback_and_uninstall_preserve_outside_edits(self):
         self.install()
-        link = self.home / '.agents/skills/handoff'
+        link = self.home / '.gemini/config/skills/handoff'
         target = os.readlink(link)
         instructions = self.home / '.gemini/AGENTS.md'
         instructions.write_text(instructions.read_text() + '\nNew Google preference.\n')
@@ -84,12 +89,40 @@ class AntigravityTests(unittest.TestCase):
         self.assertFalse(link.is_symlink())
         self.assertEqual(instructions.read_text().strip(), 'New Google preference.')
 
+    def test_upgrade_from_shared_location_preserves_codex_and_can_rollback(self):
+        adapter = self.source / 'adapters/antigravity.json'
+        current = adapter.read_text()
+        legacy = json.loads(current)
+        legacy.update(skill_scope='user', skill_directory='.agents/skills',
+                      alternate_skill_directory='config/skills')
+        adapter.write_text(json.dumps(legacy))
+        self.install('--harness', 'codex')
+        shared = self.home / '.agents/skills/handoff'
+        target = os.readlink(shared)
+        native = self.home / '.gemini/config/skills/handoff'
+        adapter.write_text(current)
+        before = self.tree(self.home)
+        code, output = self.cli('update', '--harness', 'antigravity')
+        self.assertEqual(code, 0, output)
+        self.assertEqual(before, self.tree(self.home))
+        code, output = self.cli('update', '--harness', 'antigravity', '--apply')
+        self.assertEqual(code, 0, output)
+        self.assertTrue(native.is_symlink())
+        self.assertEqual(os.readlink(shared), target)
+        self.assertEqual(self.cli('check', '--harness', 'antigravity')[0], 0)
+        self.assertEqual(self.cli('rollback', '--apply')[0], 0)
+        self.assertFalse(native.is_symlink())
+        self.assertEqual(os.readlink(shared), target)
+        self.assertEqual(self.cli('uninstall', '--apply')[0], 0)
+        self.assertFalse(shared.is_symlink())
+
     def test_custom_home_is_recorded_for_update_and_check(self):
         custom = self.root / 'custom Google home'
         self.install('--harness-home', f'antigravity={custom}')
         self.assertTrue((custom / 'AGENTS.md').is_file())
         self.assertFalse((self.home / '.gemini/AGENTS.md').exists())
-        self.assertTrue((self.home / '.agents/skills/handoff').is_symlink())
+        self.assertTrue((custom / 'config/skills/handoff').is_symlink())
+        self.assertFalse((self.home / '.agents/skills').exists())
         self.assertEqual(load_state(self.state)['homes']['antigravity'], str(custom))
         self.assertEqual(self.cli('check')[0], 0)
         self.assertEqual(self.cli('uninstall', '--apply')[0], 0)
@@ -106,11 +139,11 @@ class AntigravityTests(unittest.TestCase):
         self.agy.chmod(0o755)
         code, output = self.cli('install', '--harness', 'antigravity', '--apply')
         self.assertEqual(code, 2, output)
-        self.assertIn('adapter verified on 1.4.2', output)
+        self.assertIn('adapter verified on 1.5.7', output)
         self.assertEqual(before, self.tree(self.home))
 
     def test_google_skill_locations_block_competing_names(self):
-        for location in ['config/skills', 'skills', 'antigravity-cli/skills']:
+        for location in ['skills', 'antigravity-cli/skills']:
             with self.subTest(location=location):
                 skill = self.home / '.gemini' / location / 'renamed-skill/SKILL.md'
                 skill.parent.mkdir(parents=True)
