@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "executable": "claude",
-  "verified_version": "2.1.301",
+  "verified_version": "2.1.322",
   "home_directory": ".claude",
   "home_environment": "CLAUDE_CONFIG_DIR",
   "instruction_file": "CLAUDE.md",

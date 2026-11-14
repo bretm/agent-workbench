@@ -24,7 +24,7 @@ Implementation details, validation, and test planning live in a companion `TECH.
 
 ## Project conventions and destination
 
-Read project instructions and relevant existing specs first. Follow the project's document locations, templates, metadata, vocabulary, and authority rules. `PRODUCT.md` and `TECH.md` describe document roles; use established filenames when the project has them. Link existing decisions rather than creating duplicate policy or status owners.
+Read project instructions and relevant existing specs first. Follow the project's document locations, templates, metadata, vocabulary, and authority rules. `PRODUCT.md` and `TECH.md` describe document roles; use established filenames when the project has them. Link existing decisions rather than creating duplicate policy or status owners. Keep durable design in appropriate existing docs and execution status in the adopted work's issue; routine progress does not need a new spec or decision document.
 
 When no convention exists, use `specs/<id>/PRODUCT.md`, where `<id>` is an existing issue id or a short kebab-case feature name. Keep companion specs together. Infer a suitable feature name from the request; ask only if the choice matters.
 
