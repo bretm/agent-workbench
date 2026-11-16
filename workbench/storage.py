@@ -1,6 +1,7 @@
 """Atomic storage and reversible path/section operations."""
 import base64
 import hashlib
+import json
 import os
 import shutil
 from pathlib import Path
@@ -47,6 +48,57 @@ def decode(value):
     if value['kind'] != 'file':
         raise Conflict('instruction file must be a regular file; refusing to follow a link')
     return base64.b64decode(value['data']).decode('utf-8')
+
+
+def permission_data(value):
+    """Read settings without adopting unrelated keys or accepting malformed rules."""
+    data = json.loads(decode(value)) if value['kind'] != 'absent' else {}
+    if not isinstance(data, dict):
+        raise Conflict('settings must be a JSON object')
+    permissions = data.get('permissions', {})
+    if not isinstance(permissions, dict):
+        raise Conflict('settings permissions must be a JSON object')
+    for key in ('allow', 'ask', 'deny'):
+        rules = permissions.get(key, [])
+        if not isinstance(rules, list) or any(not isinstance(rule, str) for rule in rules):
+            raise Conflict(f'settings permissions.{key} must be a list of strings')
+    return data
+
+
+def permission_value(data, mode=0o600):
+    return file_value(json.dumps(data, indent=2) + '\n', mode)
+
+
+def permission_matches(data, present, absent=()):
+    rules = data.get('permissions', {}).get('allow', [])
+    return all(rules.count(rule) == 1 for rule in present) and all(rule not in rules for rule in absent)
+
+
+def restore_permissions(op, current):
+    """Reverse only owned allow-list entries, retaining later user settings."""
+    data = permission_data(current)
+    before, after = set(op['before_rules']), set(op['after_rules'])
+    if permission_matches(data, before, after - before):
+        return current  # Already recovered, including a partial transaction.
+    if not permission_matches(data, after, before - after):
+        raise Conflict(f'{op["path"]}: managed permission changed since transaction')
+    if current == op['after']:
+        restored = dict(op['before'])
+        if restored['kind'] == 'file':
+            restored['mode'] = current.get('mode', restored['mode'])
+        return restored
+    permissions = data.setdefault('permissions', {})
+    rules = permissions.setdefault('allow', [])
+    rules[:] = [rule for rule in rules if rule not in after - before]
+    rules.extend(rule for rule in op['before_rules'] if rule not in rules)
+    original = permission_data(op['before'])
+    if not rules and 'allow' not in original.get('permissions', {}):
+        del permissions['allow']
+    if not permissions and 'permissions' not in original:
+        del data['permissions']
+    if not data and op['before']['kind'] == 'absent':
+        return {'kind': 'absent'}
+    return permission_value(data, current.get('mode', 0o600))
 
 
 def block(text, kind='section'):
@@ -143,6 +195,8 @@ def digest(files):
 
 def matches(path, entry):
     current = snapshot(path, tree=entry['type'] == 'tree')
+    if entry['type'] == 'json-permissions':
+        return current['kind'] == 'file' and permission_matches(permission_data(current), entry['rules'])
     if entry['type'] in SECTION_TYPES:
         return current['kind'] == 'file' and block(decode(current), entry['type']) == entry['block']
     return current == entry['expected']
@@ -154,6 +208,8 @@ def inverse(op):
     current = snapshot(path, tree=True)
     if current == op['before']:
         return current  # Mutation was not reached, or already recovered.
+    if op['type'] == 'json-permissions':
+        return restore_permissions(op, current)
     if op['type'] == 'tree' and current['kind'] == 'absent':
         # A directory was atomically archived before its replacement was written.
         return op['before']
