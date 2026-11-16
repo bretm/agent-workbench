@@ -8,7 +8,7 @@ import shlex
 import subprocess
 
 from .storage import (Conflict, SECTION_TYPES, block, decode, digest, file_value, matches,
-                      replace_block, section, snapshot)
+                      permission_data, permission_value, replace_block, section, snapshot)
 
 
 def read_json(path, default=None):
@@ -100,6 +100,18 @@ def validate(source):
         paths += adapter['shadow_files'] + adapter['project_shadow_files'] + adapter['project_skill_directories']
         paths += [adapter[k] for k in ['project_bridge', 'alternate_skill_directory'] if adapter[k]]
         paths += adapter.get('additional_skill_directories', [])
+        read_permissions = adapter.get('read_permissions')
+        if read_permissions is not None:
+            if (not isinstance(read_permissions, dict)
+                    or set(read_permissions) != {'settings_file', 'user_directories'}
+                    or not isinstance(read_permissions['settings_file'], str)
+                    or not Path(read_permissions['settings_file']).parts
+                    or not isinstance(read_permissions['user_directories'], list)
+                    or not read_permissions['user_directories']
+                    or any(not isinstance(p, str) or not Path(p).parts
+                           for p in read_permissions['user_directories'])):
+                raise Conflict(f'{harness}: invalid read_permissions contract')
+            paths += [read_permissions['settings_file'], *read_permissions['user_directories']]
         reset = adapter.get('workflow_reset')
         if reset:
             paths += reset['harness_paths'] + reset['user_paths'] + [reset['settings_file']] + reset['additional_settings_files']
@@ -255,6 +267,28 @@ class Plan:
         self.operations.append({'path': key, 'type': 'file', 'before': current, 'after': after})
         self.messages.append(f'RETIRE selected competing link {path} -> {target}')
 
+    def add_permissions(self, path, rules):
+        """Own only newly inserted rules; existing grants stay user-owned."""
+        key = str(path)
+        current = self.current(path)
+        entry = self.next['entries'].get(key)
+        if entry and (entry['type'] != 'json-permissions' or not matches(path, entry)):
+            raise Conflict(f'{path}: locally modified managed permissions')
+        data = permission_data(current)
+        existing = data.get('permissions', {}).get('allow', [])
+        added = [rule for rule in dict.fromkeys(rules) if rule not in existing]
+        if not added:
+            self.messages.append(f'OK {path}: read permissions already present')
+            return
+        data.setdefault('permissions', {}).setdefault('allow', []).extend(added)
+        owned = (entry['rules'] if entry else []) + added
+        value = permission_value(data, current.get('mode', 0o600))
+        self.next['entries'][key] = {'type': 'json-permissions', 'rules': owned,
+                                     'expected': value, 'original': entry['original'] if entry else current}
+        self.operation({'path': key, 'type': 'json-permissions', 'before': current, 'after': value,
+                        'before_rules': entry['rules'] if entry else [], 'after_rules': owned})
+        self.messages.append(f'ALLOW READ {path}: ' + ', '.join(added))
+
     def attempt(self, callback):
         try:
             callback()
@@ -351,6 +385,10 @@ def installation(source, home, state_dir, state, config, harnesses, repos, homes
         rules = files['agreements/working.md'] + '\nShared model reference: ' + str(release / 'reference/models.md') + '\nWork-record policy: ' + str(release / 'reference/work-records.md') + '\nRead the work-record policy when starting existing tracked work, before planning adopted work, or when making a handoff.\n'
         rules += 'Private context directory: ' + str(private_root) + '\nRead its context/INDEX.md only for relevant personal facts and preferences. Missing context stays unknown.\nPrivate context tool: python3 -B ' + shlex.quote(str(release / 'runtime/awb-local.py')) + ' context\nUse --context-dir ' + shlex.quote(str(private_root)) + ' with private tools.\n'
         plan.attempt(lambda a=a, harness_home=harness_home, rules=rules: plan.add(harness_home / a['instruction_file'], None, 'section', section(rules)))
+        if permissions := a.get('read_permissions'):
+            grants = [f'read_file({home / directory})' for directory in permissions['user_directories']]
+            plan.attempt(lambda permissions=permissions, grants=grants, harness_home=harness_home:
+                         plan.add_permissions(harness_home / permissions['settings_file'], grants))
     for key in migrations:
         if key not in allowed_migrations:
             plan.conflicts.append(f'{key}: migration is outside the selected harness skill locations')
@@ -407,6 +445,11 @@ def removal(state):
                 raise Conflict(f'{p}: drift blocks uninstall')
             current = snapshot(p, tree=True)
             op = {'path': key, 'type': entry['type'], 'before': entry['original'], 'after': entry['expected']}
+            if entry['type'] == 'json-permissions':
+                baseline = permission_data(entry['original'])
+                baseline.setdefault('permissions', {}).setdefault('allow', []).extend(entry['rules'])
+                op.update(before_rules=[], after_rules=entry['rules'],
+                          after=permission_value(baseline, entry['original'].get('mode', 0o600)))
             if entry['type'] in SECTION_TYPES:
                 original_text = decode(entry['original']) if entry['original']['kind'] == 'file' else ''
                 op.update(before_block=block(original_text, entry['type']), after_block=entry['block'])
@@ -422,6 +465,8 @@ def removal(state):
                     change['type'] = 'tree'
                 if entry['type'] in SECTION_TYPES:
                     change.update(before_block=entry['block'], after_block=block(decode(after), entry['type']) if after['kind'] == 'file' else None)
+                if entry['type'] == 'json-permissions':
+                    change.update(before_rules=entry['rules'], after_rules=[])
                 plan.operations.append(change)
                 plan.messages.append(f'RESTORE / REMOVE {p}')
         plan.attempt(remove)

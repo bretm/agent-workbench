@@ -2,6 +2,18 @@
 
 Dated entries describe checks and policy at the time; they are not current workflow instructions. Use the [work-record policy](../reference/work-records.md) and source skills for current issue and prompt maintenance.
 
+## Antigravity personal-directory read permission
+
+Checked 2026-11-16 with Antigravity CLI **1.5.9**. Ordinary install and update now preview and add a recursive `read_file(<user-home>/.agents)` grant in the client's global JSON permissions. Only newly inserted allow-list rules are owned. Pre-existing grants, unrelated settings, explicit ask/deny rules and strict mode are preserved. See [installer ownership](installer.md#ownership) and the [adapter contract](adapters.md).
+
+A staged source with the candidate version pin passed install, check, update and uninstall in a temporary home and disposable Git repository using the actual 1.5.9 binary. Native `agy -p /skills` listed all ten workbench skills and bundled skills; `agy -p /permissions` displayed the installed rule in the global allow list. The version pin was advanced after these checks. The initial native probe could not open its localhost socket inside the execution sandbox; the permitted rerun succeeded. No inference or credential changes were requested. A temporary home does not isolate the system keyring. These results verify discovery and loading of the permission rule, not an end-to-end model-initiated read or instruction obedience. Probe logs remain outside tracked content.
+
+Regression fixtures cover read-only previews, private diffs, existing settings and file modes, pre-existing unowned grants, later settings edits, custom homes, upgrades, idempotence, malformed or linked settings, permission drift, stale plans, rollback, interrupted install/removal recovery, and uninstall. They also verify that the installer leaves broad non-workspace access disabled when unset. Unit-test client version probes are stubs.
+
+All **140 tests pass** with `python3 -m unittest discover -s tests -v`; `python3 awb.py validate` and `git diff --check` pass. All **20 local Markdown file links** in the three changed documents resolve. The separately approved live read grant remains present; this validation did not apply a live workbench update.
+
+The initial PR CI run also passed all 140 tests and validation on Ubuntu 24.04 and macOS 15 Intel. Its macOS 14 job was cancelled before any steps ran because GitHub no longer supports that runner configuration. GitHub [retired all macOS 14 runners on November 2, 2026](https://github.blog/changelog/2026-10-01-github-actions-macos-14-runner-image-retirement/). The matrix now uses `macos-15` for Apple Silicon alongside `macos-15-intel`; this infrastructure change does not establish compatibility with macOS 14. [Initial CI results](https://github.com/bretm/agent-workbench/actions/runs/43932195328).
+
 ## Current actionable issue plans
 
 Reviewed 2026-11-14. The canonical policy is `reference/work-records.md`; generated client instructions take their shared rules from `agreements/working.md` through `workbench/planner.py`. There are no separate GitHub issue templates. The policy's compact examples cover an active child, coordinating parent and closed issue. Session planning, handoff, both spec skills and the reusable audit guidance now follow the same ownership and maintenance rules.

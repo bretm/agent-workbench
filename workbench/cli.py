@@ -233,6 +233,9 @@ def run(args):
             if op['type'] == 'toml-section':
                 before_text = (op['before_block'] or '') + '\n'
                 after_text = (op['after_block'] or '') + '\n'
+            if op['type'] == 'json-permissions':
+                before_text = '\n'.join(op['before_rules']) + '\n'
+                after_text = '\n'.join(op['after_rules']) + '\n'
             print(''.join(difflib.unified_diff(before_text.splitlines(True), after_text.splitlines(True),
                                               fromfile=op['path'] + ' (before)', tofile=op['path'] + ' (planned)')), end='')
     for error in plan.conflicts:
