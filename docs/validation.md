@@ -12,6 +12,8 @@ Regression fixtures cover read-only previews, private diffs, existing settings a
 
 All **140 tests pass** with `python3 -m unittest discover -s tests -v`; `python3 awb.py validate` and `git diff --check` pass. All **20 local Markdown file links** in the three changed documents resolve. The separately approved live read grant remains present; this validation did not apply a live workbench update.
 
+The initial PR CI run also passed all 140 tests and validation on Ubuntu 24.04 and macOS 15 Intel. Its macOS 14 job was cancelled before any steps ran because GitHub no longer supports that runner configuration. GitHub [retired all macOS 14 runners on November 2, 2026](https://github.blog/changelog/2026-10-01-github-actions-macos-14-runner-image-retirement/). The matrix now uses `macos-15` for Apple Silicon alongside `macos-15-intel`; this infrastructure change does not establish compatibility with macOS 14. [Initial CI results](https://github.com/bretm/agent-workbench/actions/runs/43932195328).
+
 ## Current actionable issue plans
 
 Reviewed 2026-11-14. The canonical policy is `reference/work-records.md`; generated client instructions take their shared rules from `agreements/working.md` through `workbench/planner.py`. There are no separate GitHub issue templates. The policy's compact examples cover an active child, coordinating parent and closed issue. Session planning, handoff, both spec skills and the reusable audit guidance now follow the same ownership and maintenance rules.
