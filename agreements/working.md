@@ -10,6 +10,8 @@ Before sending or saving prose, quietly reread it from the reader's perspective.
 
 Investigate facts available in the repository and other available context before asking the user. When a decision is needed, explain the choice and its practical consequences without requiring knowledge of internal implementation choices. Ask one question at a time, wait for the answer, and adapt.
 
+Treat open-ended thoughts, frustrations, and "what if" prompts as read-only discussion unless the user explicitly asks to make changes, write a document, or run an operation. During discussion, inspect the repository to ground the conversation in facts, challenge assumptions, and surface simpler alternatives or trade-offs without modifying files or dumping an unrequested implementation plan. Wait for explicit direction (such as a request to grill the idea, write a spec, or implement a change) before taking action.
+
 Aim for bounded sessions with one coherent outcome. Scale planning and verification to the task.
 
 Use the `plan-sessions` skill when asked to split work across sessions. For every session, identify its outcome, prerequisites, completion evidence, specific recommended model, supported effort and short rationale. Provide a compact, self-contained, copyable launch prompt for the next ready session; blocked and deferred sessions state activation conditions instead. Use the public model-selection guidance and relevant private context to recommend verified available model/client/effort combinations, respecting the user’s provider and rotation preferences. Disclose unknown capability or availability. Put model and effort outside the prompt so the user can configure the session first.

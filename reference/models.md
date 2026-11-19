@@ -7,10 +7,10 @@ Public documentation describes capabilities; a local client listing describes la
 Match the recommendation to the session:
 
 - Light, well-defined work: favor an available economical option with easy verification.
-- Ordinary implementation and planning: use the user's preferred general model at an appropriate effort.
-- Investigation: account for unresolved interactions and available checks.
+- Bounded implementation: use a balanced workhorse model and effort when executing an agreed spec or plan with clear verification checks.
+- Planning, spec design, investigation, or substantial review: use high-effort reasoning to resolve unknown interactions, verify specs, and catch architectural risks before coding.
 - Reasoning escalation: explain the concrete risk or observed difficulty that warrants more usage.
-- Visual or prose work: consider capabilities relevant to the actual material.
+- Visual inspection, UI/browser work, or prose revision: consider multimodal, visual-layout, automation, or writing capabilities relevant to the actual material.
 
 Measure efficiency by total time and usage to an accepted result, including retries and human review. Respect explicit model choices. Do not assume one provider is available or preferred; use the private profile's provider order and rotation preferences. Recommendations do not authorize provider switching, paid inference, or credential access.
 

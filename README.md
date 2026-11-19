@@ -6,7 +6,7 @@ Works with **Codex, Claude Code and Google Antigravity CLI on Linux and macOS**.
 
 ## What's included
 
-- Write product and technical plans before building something substantial.
+- Write and fresh-context verify a design spec before building something substantial.
 - Break larger changes into manageable work sessions.
 - Save progress and next steps before switching sessions.
 - Think through a decision, or ask for a clearer explanation.
@@ -36,7 +36,7 @@ python3 awb.py check
 
 It adds the skills and working agreements to your assistants' configuration. It checks their versions and stops if a version hasn't been verified; see [tested versions and limitations](docs/validation.md).
 
-Start a new assistant session and try “Write a product spec for this change” or “Split this work into sessions.” Browser checks need [Playwright CLI installed separately](docs/installer.md#optional-browser-tools).
+Start a new assistant session and try “Write a spec for this change” or “Split this work into sessions.” Browser checks need [Playwright CLI installed separately](docs/installer.md#optional-browser-tools).
 
 For interface work, try “Use UI UX Pro Max to review this app's navigation and forms” or “Use Taste to redesign this dashboard.” UI UX Pro Max includes a local Python search tool; Taste's full browser workflow needs Node 22+ and Chrome, Edge or Chromium. See [design skill setup](docs/installer.md#design-skills) for prerequisites and how the two skills work together.
 
