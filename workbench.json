@@ -8,8 +8,7 @@
     "grilling": {"dependencies": []},
     "grill-with-docs": {"dependencies": ["grilling"]},
     "wait-what": {"dependencies": []},
-    "write-product-spec": {"dependencies": []},
-    "write-tech-spec": {"dependencies": ["write-product-spec", "plan-sessions"]},
+    "write-spec": {"dependencies": ["grilling", "plan-sessions"]},
     "playwright-cli": {"dependencies": []},
     "ui-ux-pro-max": {"dependencies": []},
     "design-taste-frontend": {"dependencies": []}

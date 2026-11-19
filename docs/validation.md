@@ -2,6 +2,14 @@
 
 Dated entries describe checks and policy at the time; they are not current workflow instructions. Use the [work-record policy](../reference/work-records.md) and source skills for current issue and prompt maintenance.
 
+## Unified spec workflow and client reverification
+
+Checked 2026-11-19. Retired the Warp-derived `write-product-spec` and `write-tech-spec` skills (and `reference/WARP-COMMON-SKILLS-LICENSE.txt`) and replaced them with the original `write-spec` skill, updated `agreements/working.md` to keep open-ended discussion read-only until explicit action is requested, sharpened `skills/grilling/SKILL.md` for scope and verification boundaries, and separated bounded implementation from high-effort planning/spec design in `reference/models.md`.
+
+Reverified Codex **0.170.0** and Antigravity CLI **1.5.13** (with Claude Code **2.1.322** unchanged) in a temporary home and disposable Git repository using staged candidate pins and real client binaries. Installer bootstrap, check and uninstall passed with zero conflicts. Codex app-server `skills/list` discovered all nine workbench skills once and enabled at user scope with zero errors alongside the five bundled system skills. Antigravity's native `agy -p /skills` listed all nine workbench skills (including `write-spec`, without the retired spec skills) and `agy -p /permissions` displayed the installed global `read_file(<home>/.agents)` allow rule. No inference or credential changes were requested. These probes establish installer, discovery and permission-loading compatibility, not runtime instruction obedience.
+
+All **140 tests pass** with `python3 -m unittest discover -s tests -v`; `python3 awb.py validate` and `git diff --check` pass. The reviewed live update (`0` conflicts) was applied under explicit user authorization across Codex, Claude Code and Antigravity, retiring the two Warp spec skills and installing `write-spec` and the updated agreements; post-update `python3 awb.py check` reports a healthy installation with zero changes and conflicts.
+
 ## Antigravity personal-directory read permission
 
 Checked 2026-11-16 with Antigravity CLI **1.5.9**. Ordinary install and update now preview and add a recursive `read_file(<user-home>/.agents)` grant in the client's global JSON permissions. Only newly inserted allow-list rules are owned. Pre-existing grants, unrelated settings, explicit ask/deny rules and strict mode are preserved. See [installer ownership](installer.md#ownership) and the [adapter contract](adapters.md).

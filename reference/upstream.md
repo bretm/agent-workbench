@@ -38,19 +38,6 @@ License: [Apache-2.0](PLAYWRIGHT-CLI-LICENSE.txt), Microsoft Corporation. No ups
 
 The upstream reference paths in the table are relative to `skills/playwright-cli/`. This repository distributes adapted guidance and the upstream license, not the CLI package or browser binaries. Verify runtime availability separately. Review future upstream changes against the pinned revision; installer updates never download upstream content.
 
-## Warp Common Skills
-
-Source: https://github.com/warpdotdev/common-skills.
-Inspected revision: `7c4eb852de8d7c3e68c81802e1c59db9a611f914`, 2026-10-10.
-License: [MIT, copyright 2026 Denver Technologies, Inc.](WARP-COMMON-SKILLS-LICENSE.txt).
-
-| Adopted skill | Source path | Adaptation / dependency resolution |
-|---|---|---|
-| write-product-spec | .agents/skills/write-product-spec/SKILL.md | Numbered observable behavior and companion technical design retained. Project paths, templates and metadata take precedence; one question at a time; shared work-record policy; unavailable tool and implementation-skill references removed. |
-| write-tech-spec | .agents/skills/write-tech-spec/SKILL.md | Repository research, commit-pinned references, design tradeoffs and validation mapped to behavior retained. Project conventions and existing authority take precedence; automatic prototyping and Warp subagent planning removed. Depends on write-product-spec and plan-sessions. |
-
-These are locally controlled adaptations, not synchronized upstream mirrors. Review future changes against the pinned source. Installer updates distribute this repository's content, never upstream downloads.
-
 ## Matt Pocock and original workbench skills
 
 Source: https://github.com/mattpocock/skills.
@@ -63,6 +50,7 @@ License: [MIT, copyright 2026 Matt Pocock](MATT-POCOCK-LICENSE.txt).
 | grill-with-docs | skills/engineering/grill-with-docs/SKILL.md; skills/engineering/domain-modeling/SKILL.md | Uses the workbench grilling skill and incorporates domain modeling directly instead of harness-specific Skill calls. Existing project document conventions take precedence; domain terms are captured as agreed and ADRs offered sparingly. |
 | wait-what | skills/productivity/wait-what/SKILL.md | Context reset and simplified language retained; no unsupported invocation metadata. CONTEXT.md and CONTEXT-MAP.md are optional project inputs. |
 | handoff | skills/productivity/handoff/SKILL.md | Existing work owner, evidence and next prompt replace always writing a temporary document. Harness-specific Skill calls removed. Depends on plan-sessions prompt requirements and shared references. |
+| write-spec | Original work in agent-workbench | Unified behavior, codebase plan, testing seams, explicit clarification markers and zero-context readiness check. Depends on grilling and plan-sessions. |
 | plan-sessions | Original work in agent-workbench | Shared model and work-record references; no external runtime dependency. |
 
 These are locally controlled adaptations, not synchronized upstream mirrors. Review upstream changes as diffs against the pinned source; update this revision and license only after deliberately incorporating them. Installer updates use this repository's content, never upstream downloads.

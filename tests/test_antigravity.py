@@ -20,7 +20,7 @@ class AntigravityTests(unittest.TestCase):
     def setUp(self):
         fixtures.InstallerTests.setUp(self)
         self.agy = self.bin / 'agy'
-        self.agy.write_text('#!/bin/sh\nprintf "1.5.9\\n"\n')
+        self.agy.write_text('#!/bin/sh\nprintf "1.5.13\\n"\n')
         self.agy.chmod(0o755)
 
     def install(self, *args):
@@ -323,7 +323,7 @@ class AntigravityTests(unittest.TestCase):
         self.agy.chmod(0o755)
         code, output = self.cli('install', '--harness', 'antigravity', '--apply')
         self.assertEqual(code, 2, output)
-        self.assertIn('adapter verified on 1.5.9', output)
+        self.assertIn('adapter verified on 1.5.13', output)
         self.assertEqual(before, self.tree(self.home))
 
     def test_google_skill_locations_block_competing_names(self):
